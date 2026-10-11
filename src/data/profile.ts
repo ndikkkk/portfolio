@@ -18,6 +18,7 @@ export interface Profile {
   role: string;
   tagline: string;
   about: string[];
+  marquee: string[];
   links: {
     github: string;
     linkedin: string;
@@ -32,9 +33,19 @@ export interface Profile {
 
 export const profile: Profile = {
   name: "Andhikaalvn",
-  role: "Mahasiswa",
-  tagline: "Mahasiswa",
+  role: "AI Engineer & Web Developer",
+  tagline: "Membangun aplikasi web yang rapi sambil mendalami rekayasa AI.",
   about: ["{{ISI_SENDIRI}}"],
+  marquee: [
+    "AI Engineer",
+    "Web Developer",
+    "Next.js",
+    "Laravel",
+    "TypeScript",
+    "React",
+    "Supabase",
+    "ESP32",
+  ],
   links: {
     github: "https://github.com/ndikkkk",
     linkedin: "https://www.linkedin.com/in/andhikaalvn",

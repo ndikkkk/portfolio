@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useTheme } from "@/lib/use-theme";
+import { profile } from "@/data/profile";
 
 const NAV_LINKS = [
   { href: "#home", label: "Beranda" },
@@ -27,7 +28,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b-[var(--border-w)] border-ink bg-bg">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <a href="#home" className="text-lg font-bold">
-          Andhikaalvn
+          {profile.name}
         </a>
 
         <nav aria-label="Utama" className="hidden items-center gap-1 md:flex">

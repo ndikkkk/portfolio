@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { profile } from "@/data/profile";
+import { Hero } from "@/components/sections/hero";
+import { Marquee } from "@/components/sections/marquee";
 
 function SkipToContent() {
   return (
@@ -20,16 +21,8 @@ export default function App() {
       <Navbar />
 
       <main id="main-content">
-        <section
-          id="home"
-          className="flex min-h-dvh items-center justify-center bg-bg px-4 py-24 sm:px-6 lg:px-8"
-        >
-          <div className="max-w-4xl text-center">
-            <p className="font-medium text-muted">Halo, saya</p>
-            <h1 className="font-bold">{profile.name}</h1>
-            <p className="mt-4 text-lg text-muted">{profile.role}</p>
-          </div>
-        </section>
+        <Hero />
+        <Marquee />
 
         <section id="about" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
