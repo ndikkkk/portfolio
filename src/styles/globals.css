@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --bg: #fff8e7;
+  --ink: #111111;
+  --muted: #4a4a4a;
+  --surface: #ffffff;
+  --yellow: #ffd43b;
+  --pink: #ff8fb1;
+  --blue: #7cb9ff;
+  --green: #7ee0a0;
+  --orange: #ff9f5a;
+  --lilac: #c9b5ff;
+  --red: #ff5c5c;
+  --on-accent: #111111;
+
+  --border-w: 3px;
+  --radius: 8px;
+  --shadow-offset: 4px;
+  --shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--ink);
+}
+
+.dark {
+  --bg: #16161a;
+  --ink: #f5f0e6;
+  --muted: #b8b2a6;
+  --surface: #22222a;
+  --shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--ink);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-yellow: var(--yellow);
+  --color-pink: var(--pink);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-orange: var(--orange);
+  --color-lilac: var(--lilac);
+  --color-red: var(--red);
+  --color-on-accent: var(--on-accent);
+
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    line-height: 1.6;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 5vw, 3.5rem);
+    line-height: 1.05;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
