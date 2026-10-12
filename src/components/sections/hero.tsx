@@ -29,13 +29,13 @@ export function Hero() {
           <Button asChild size="lg">
             <a href="#projects">
               Lihat proyek
-              <ArrowRight />
+              <ArrowRight aria-hidden="true" />
             </a>
           </Button>
           <Button asChild size="lg" variant="outline">
             <a href="#contact">
               Hubungi saya
-              <Mail />
+              <Mail aria-hidden="true" />
             </a>
           </Button>
         </div>

@@ -1,13 +1,16 @@
 import { Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
+import { Reveal } from "@/components/ui/reveal";
 
 export function About() {
   return (
     <section id="about" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
         <div>
-          <h2 className="font-bold">Tentang</h2>
+          <Reveal>
+            <h2 className="font-bold">Tentang</h2>
+          </Reveal>
           <div className="mt-6 space-y-5 text-muted">
             {profile.about.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
@@ -26,7 +29,7 @@ export function About() {
           </div>
         </div>
 
-        <div className="mx-auto">
+        <Reveal delay={120} className="mx-auto">
           {profile.photo ? (
             <img
               src={profile.photo}
@@ -40,7 +43,7 @@ export function About() {
               <span className="text-sm font-medium">belum diisi</span>
             </div>
           )}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

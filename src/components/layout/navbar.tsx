@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -66,6 +67,9 @@ export function Navbar() {
             <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Tautan navigasi utama situs.
+                </SheetDescription>
               </SheetHeader>
               <nav aria-label="Menu seluler" className="flex flex-col gap-1">
                 {NAV_LINKS.map((link) => (

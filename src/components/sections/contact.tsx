@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import { Mail } from "lucide-react";
 import { profile } from "@/data/profile";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/icons";
+import { Reveal } from "@/components/ui/reveal";
 
 type ContactItem = {
   label: string;
@@ -28,11 +29,13 @@ export function Contact() {
   return (
     <section id="contact" className="bg-bg px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <h2 className="font-bold">Kontak</h2>
-        <p className="mt-4 max-w-2xl text-muted">
-          Punya ide, pertanyaan, atau sekadar ingin menyapa? Silakan hubungi saya
-          lewat salah satu kanal di bawah ini.
-        </p>
+        <Reveal>
+          <h2 className="font-bold">Kontak</h2>
+          <p className="mt-4 max-w-2xl text-muted">
+            Punya ide, pertanyaan, atau sekadar ingin menyapa? Silakan hubungi saya
+            lewat salah satu kanal di bawah ini.
+          </p>
+        </Reveal>
 
         <div className="mt-8 flex flex-wrap gap-4">
           {items.map(({ label, href, Icon }) => (
