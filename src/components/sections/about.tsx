@@ -2,6 +2,7 @@ import { Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
 import { Reveal } from "@/components/ui/reveal";
+import { PixelPortrait } from "@/components/ui/pixel-portrait";
 
 export function About() {
   return (
@@ -30,11 +31,12 @@ export function About() {
         </div>
 
         <Reveal delay={120} className="mx-auto">
-          {profile.photo ? (
-            <img
+          {profile.photo && profile.photoPixel ? (
+            <PixelPortrait
               src={profile.photo}
+              pixelSrc={profile.photoPixel}
               alt={`Foto ${profile.name}`}
-              className="size-56 rotate-2 rounded-[var(--radius)] border-[var(--border-w)] border-ink object-cover shadow-[var(--shadow)] sm:size-64"
+              className="size-56 rotate-2 sm:size-64"
             />
           ) : (
             <div className="flex size-56 rotate-2 flex-col items-center justify-center gap-2 rounded-[var(--radius)] border-[var(--border-w)] border-ink bg-yellow p-6 text-center text-on-accent shadow-[var(--shadow)] sm:size-64">

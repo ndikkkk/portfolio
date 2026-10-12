@@ -18,6 +18,7 @@ export interface Profile {
   role: string;
   tagline: string;
   photo?: string;
+  photoPixel?: string;
   about: string[];
   marquee: string[];
   links: {
@@ -35,7 +36,8 @@ export interface Profile {
 
 export const profile: Profile = {
   name: "Andhikaalvn",
-  photo: "",
+  photo: "/photos/portrait.webp",
+  photoPixel: "/photos/portrait-pixel.webp",
   role: "AI Engineer & Web Developer",
   tagline: "Membangun aplikasi web yang rapi sambil mendalami rekayasa AI.",
   about: [
