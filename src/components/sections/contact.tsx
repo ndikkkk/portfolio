@@ -26,10 +26,10 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
+    <section id="contact" className="bg-yellow px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <h2 className="font-bold">Kontak</h2>
-        <p className="mt-4 max-w-2xl text-muted">
+        <h2 className="font-bold text-on-accent">Kontak</h2>
+        <p className="mt-4 max-w-2xl text-on-accent">
           Punya ide, pertanyaan, atau sekadar ingin menyapa? Silakan hubungi saya
           lewat salah satu kanal di bawah ini.
         </p>
