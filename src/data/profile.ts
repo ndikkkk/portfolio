@@ -17,6 +17,7 @@ export interface Profile {
   name: string;
   role: string;
   tagline: string;
+  photo?: string;
   about: string[];
   marquee: string[];
   links: {
@@ -33,9 +34,14 @@ export interface Profile {
 
 export const profile: Profile = {
   name: "Andhikaalvn",
+  photo: "",
   role: "AI Engineer & Web Developer",
   tagline: "Membangun aplikasi web yang rapi sambil mendalami rekayasa AI.",
-  about: ["{{ISI_SENDIRI}}"],
+  about: [
+    "Saya mahasiswa Informatika yang tertarik pada dua bidang yang saling melengkapi: pengembangan web dan kecerdasan buatan (AI). Ketertarikan ini muncul dari rasa ingin tahu bagaimana sebuah aplikasi bisa terasa mudah dipakai sekaligus mampu mengambil keputusan cerdas di baliknya.",
+    "Di sisi web, saya senang membangun antarmuka yang rapi dan backend yang dapat diandalkan. Di sisi AI, saya sedang mendalami cara mengintegrasikan model ke dalam produk nyata, supaya aplikasi yang saya buat tidak hanya berfungsi tetapi juga menambah nilai bagi penggunanya.",
+    "Saat ini saya terus memperdalam keduanya lewat proyek dan pembelajaran mandiri, dengan tujuan tumbuh menjadi engineer yang paham dari tampilan depan sampai logika model di belakangnya.",
+  ],
   marquee: [
     "AI Engineer",
     "Web Developer",

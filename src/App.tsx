@@ -2,6 +2,8 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
 import { Marquee } from "@/components/sections/marquee";
+import { About } from "@/components/sections/about";
+import { Contact } from "@/components/sections/contact";
 
 function SkipToContent() {
   return (
@@ -24,12 +26,7 @@ export default function App() {
         <Hero />
         <Marquee />
 
-        <section id="about" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="font-bold">Tentang</h2>
-            <p className="mt-4 text-muted">Bagian ini akan diisi nanti.</p>
-          </div>
-        </section>
+        <About />
 
         <section id="projects" className="bg-bg px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
@@ -55,12 +52,7 @@ export default function App() {
           </div>
         </section>
 
-        <section id="contact" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="font-bold">Kontak</h2>
-            <p className="mt-4 text-muted">Bagian ini akan diisi nanti.</p>
-          </div>
-        </section>
+        <Contact />
       </main>
 
       <Footer />
