@@ -25,8 +25,9 @@ export interface Profile {
     linkedin: string;
     email: string;
     instagram: string;
-    whatsapp?: string;
+    whatsapp: string;
   };
+  whatsappChatMessage: string;
   projects: Project[];
   achievements: Achievement[];
   tools: Record<string, string[]>;
@@ -57,7 +58,9 @@ export const profile: Profile = {
     linkedin: "https://www.linkedin.com/in/andhikaalvn",
     email: "andhi618@gmail.com",
     instagram: "https://www.instagram.com/andhikaalvn",
+    whatsapp: "https://wa.me/6285803277484",
   },
+  whatsappChatMessage: "Hai, saya lihat portofolio kamu dan ingin bertanya lebih lanjut.",
   projects: [
     {
       title: "kawasanAI",
@@ -136,3 +139,9 @@ export const profile: Profile = {
     ],
   },
 };
+
+export function whatsAppChatHref(): string {
+  const base = profile.links.whatsapp;
+  if (!base) return "#";
+  return `${base}?text=${encodeURIComponent(profile.whatsappChatMessage)}`;
+}

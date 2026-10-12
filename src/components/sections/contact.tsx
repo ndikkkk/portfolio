@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { Mail } from "lucide-react";
-import { profile } from "@/data/profile";
+import { profile, whatsAppChatHref } from "@/data/profile";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/icons";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -13,15 +13,7 @@ type ContactItem = {
 export function Contact() {
   const items: ContactItem[] = [
     { label: "Email", href: `mailto:${profile.links.email}`, Icon: Mail },
-    ...(profile.links.whatsapp
-      ? [
-          {
-            label: "WhatsApp",
-            href: profile.links.whatsapp,
-            Icon: WhatsAppIcon,
-          },
-        ]
-      : []),
+    { label: "WhatsApp", href: whatsAppChatHref(), Icon: WhatsAppIcon },
     { label: "LinkedIn", href: profile.links.linkedin, Icon: LinkedInIcon },
     { label: "GitHub", href: profile.links.github, Icon: GitHubIcon },
   ];
