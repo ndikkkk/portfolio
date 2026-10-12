@@ -1,25 +1,9 @@
 import { ExternalLink } from "lucide-react";
 import { profile } from "@/data/profile";
 import { GitHubIcon } from "@/components/icons";
+import { tagColor } from "@/lib/tag-colors";
 
-const TAG_COLORS = [
-  "bg-yellow",
-  "bg-pink",
-  "bg-blue",
-  "bg-green",
-  "bg-orange",
-  "bg-lilac",
-] as const;
 
-// Warna badge dibuat konsisten per nama teknologi,
-// supaya tag yang sama selalu berwarna sama di seluruh kartu.
-function tagColor(tag: string): (typeof TAG_COLORS)[number] {
-  let hash = 0;
-  for (let i = 0; i < tag.length; i += 1) {
-    hash = (hash * 31 + tag.charCodeAt(i)) >>> 0;
-  }
-  return TAG_COLORS[hash % TAG_COLORS.length];
-}
 
 export function Projects() {
   return (
