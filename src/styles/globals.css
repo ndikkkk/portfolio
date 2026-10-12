@@ -89,6 +89,14 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.bg-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--ink) 12%, transparent) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 26px 26px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
