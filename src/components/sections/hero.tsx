@@ -1,5 +1,6 @@
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Lanyard } from "@/components/ui/lanyard";
 import { profile } from "@/data/profile";
 
 export function Hero() {
@@ -40,30 +41,48 @@ export function Hero() {
         className="pointer-events-none absolute right-1/3 top-8 hidden size-8 rounded-full bg-ink sm:block"
       />
 
-      <div className="relative mx-auto flex min-h-[70dvh] max-w-6xl flex-col items-start justify-center gap-6">
-        <span className="rounded-[var(--radius)] border-[var(--border-w)] border-ink bg-yellow px-3 py-1 font-mono text-sm font-bold text-on-accent shadow-[var(--shadow)]">
-          Halo, saya
-        </span>
+      <div className="relative mx-auto grid min-h-[70dvh] w-full max-w-6xl items-center gap-4 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)] md:gap-8">
+        <div className="relative z-10 flex flex-col items-start gap-6 py-8">
+          <span className="rounded-[var(--radius)] border-[var(--border-w)] border-ink bg-yellow px-3 py-1 font-mono text-sm font-bold text-on-accent shadow-[var(--shadow)]">
+            Halo, saya
+          </span>
 
-        <h1 className="font-bold text-ink">{profile.name}</h1>
+          <h1 className="font-bold text-ink">{profile.name}</h1>
 
-        <p className="max-w-2xl text-lg font-medium text-muted sm:text-xl">
-          {profile.tagline}
-        </p>
+          <p className="max-w-2xl text-lg font-medium text-muted sm:text-xl">
+            {profile.tagline}
+          </p>
 
-        <div className="flex flex-wrap items-center gap-4">
-          <Button asChild size="lg">
-            <a href="#projects">
-              Lihat proyek
-              <ArrowRight aria-hidden="true" />
-            </a>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <a href="#contact">
-              Hubungi saya
-              <Mail aria-hidden="true" />
-            </a>
-          </Button>
+          <div className="flex flex-wrap items-center gap-4">
+            <Button asChild size="lg">
+              <a href="#projects">
+                Lihat proyek
+                <ArrowRight aria-hidden="true" />
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a href="#contact">
+                Hubungi saya
+                <Mail aria-hidden="true" />
+              </a>
+            </Button>
+          </div>
+        </div>
+
+        <div
+          aria-label="Kartu foto profil interaktif"
+          className="mx-auto h-[min(58dvh,30rem)] min-h-80 w-full max-w-md md:h-[min(70dvh,38rem)] md:min-h-[28rem]"
+        >
+          <Lanyard
+            frontImage={profile.photo}
+            backImage={profile.photo}
+            size={0.68}
+            anchor="center"
+            strapColor="#111111"
+            cardColor="#ffffff"
+            finish="matte"
+            breeze={0.2}
+          />
         </div>
       </div>
     </section>
