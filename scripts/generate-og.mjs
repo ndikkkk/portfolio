@@ -131,7 +131,7 @@ const og = render(1200, 630, ({ fill, text }) => {
   fill(65, 301, 132, 6, YELLOW);
 
   text("ANDHIKAALVN", 60, 180, 9, INK);
-  text("AI ENGINEER & WEB DEVELOPER", 60, 342, 3, INK);
+  text("Antusias mengeksplorasi AI Engineering dan Web Development.", 60, 342, 3, INK);
 });
 writePng("public/og-image.png", og, 1200, 630);
 

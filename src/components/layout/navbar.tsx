@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: "#home", label: "Beranda" },
   { href: "#about", label: "Tentang" },
   { href: "#projects", label: "Proyek" },
+  { href: "#achievements", label: "Pencapaian" },
   { href: "#tools", label: "Tools" },
   { href: "#contact", label: "Kontak" },
 ];

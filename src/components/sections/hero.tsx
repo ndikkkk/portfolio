@@ -1,6 +1,6 @@
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Lanyard } from "@/components/ui/lanyard";
+import Lanyard from "@/components/ui/lanyard";
 import { profile } from "@/data/profile";
 
 export function Hero() {

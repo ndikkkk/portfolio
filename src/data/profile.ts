@@ -8,8 +8,8 @@ export interface Project {
 
 export interface Achievement {
   title: string;
-  issuer: string;
-  date: string;
+  issuer?: string;
+  date?: string;
   url?: string;
 }
 
@@ -38,12 +38,10 @@ export const profile: Profile = {
   name: "Andhikaalvn",
   photo: "/photos/portrait.webp",
   photoPixel: "/photos/portrait-pixel.webp",
-  role: "AI Engineer & Web Developer",
-  tagline: "Membangun aplikasi web yang rapi sambil mendalami rekayasa AI.",
+  role: "Mahasiswa Informatika",
+  tagline: "Antusias mengeksplorasi AI Engineering dan Web Development.",
   about: [
-    "Saya mahasiswa Informatika yang tertarik pada dua bidang yang saling melengkapi: pengembangan web dan kecerdasan buatan (AI). Ketertarikan ini muncul dari rasa ingin tahu bagaimana sebuah aplikasi bisa terasa mudah dipakai sekaligus mampu mengambil keputusan cerdas di baliknya.",
-    "Di sisi web, saya senang membangun antarmuka yang rapi dan backend yang dapat diandalkan. Di sisi AI, saya sedang mendalami cara mengintegrasikan model ke dalam produk nyata, supaya aplikasi yang saya buat tidak hanya berfungsi tetapi juga menambah nilai bagi penggunanya.",
-    "Saat ini saya terus memperdalam keduanya lewat proyek dan pembelajaran mandiri, dengan tujuan tumbuh menjadi engineer yang paham dari tampilan depan sampai logika model di belakangnya.",
+    "Saya adalah mahasiswa semester akhir di jurusan Informatika, memiliki ketertarikan khusus pada bidang kecerdasan buatan (AI) dan pengembangan web. Saat ini sedang aktif membangun fondasi pengetahuan di bidang pemrograman, struktur data, dan algoritma, sekaligus mengeksplorasi berbagai teknologi modern untuk menciptakan solusi digital yang inovatif.",
   ],
   marquee: [
     "AI Engineer",
@@ -99,7 +97,16 @@ export const profile: Profile = {
       repo: "https://github.com/ndikkkk/Wireless-Mobile-Computing",
     },
   ],
-  achievements: [],
+  achievements: [
+    {
+      title: "Sertifikasi Cybersecurity",
+      url: "/photos/Sertifikasi%20Cybersecurity.pdf",
+    },
+    {
+      title: "Sertifikat Dicoding",
+      url: "/photos/Sertifikat%20Dicoding.pdf",
+    },
+  ],
   tools: {
     Frontend: [
       "HTML",
