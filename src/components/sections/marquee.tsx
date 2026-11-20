@@ -11,11 +11,12 @@ export function Marquee() {
             <ul
               key={dup}
               aria-hidden={dup === 1}
-              className="flex shrink-0 items-center"
+              className="flex min-w-[100vw] shrink-0 items-center justify-around"
             >
-              {profile.marquee.map((item) => (
+              {[...profile.marquee, ...profile.marquee, ...profile.marquee].map((item, index) => (
                 <li
-                  key={`${dup}-${item}`}
+                  key={`${dup}-${index}`}
+                  aria-hidden={index >= profile.marquee.length ? true : undefined}
                   className="flex items-center whitespace-nowrap font-bold"
                 >
                   <span>{item}</span>

@@ -16,6 +16,14 @@ export function Hero() {
       />
 
       {/* Elemen dekoratif: beberapa stiker geometris */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden font-mono text-xs sm:text-sm">
+        <span className="absolute left-5 top-8 -rotate-6 rounded border-2 border-ink bg-yellow px-3 py-1 text-on-accent shadow-[var(--shadow)] sm:left-[15%]">f(x) = x² + 1</span>
+        <span className="absolute right-5 top-12 rotate-6 rounded border-2 border-ink bg-lilac px-3 py-1 text-on-accent sm:right-[20%]">{'{ 0, 1 }'}</span>
+        <span className="absolute bottom-5 left-[12%] rotate-3 rounded border-2 border-ink bg-blue px-3 py-1 text-on-accent">O(log n)</span>
+        <span className="absolute bottom-8 right-[12%] -rotate-6 rounded border-2 border-ink bg-green px-3 py-1 text-on-accent">∑ xᵢ</span>
+        <span className="absolute left-[48%] top-20 size-5 rotate-45 border-2 border-ink bg-pink" />
+        <span className="absolute bottom-28 left-[46%] hidden size-9 rounded-full border-4 border-ink sm:block" />
+      </div>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-8 top-24 hidden rotate-12 rounded-[var(--radius)] border-[var(--border-w)] border-ink bg-pink shadow-[var(--shadow)] sm:right-12 sm:block sm:size-28 lg:right-24 lg:size-32"

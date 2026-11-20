@@ -39,13 +39,14 @@ export const profile: Profile = {
   photo: "/photos/portrait.webp",
   photoPixel: "/photos/portrait-pixel.webp",
   role: "Mahasiswa Informatika",
-  tagline: "Antusias mengeksplorasi AI Engineering dan Web Development.",
+  tagline: "Mahasiswa S1 Informatika Universitas Sebelas Maret",
+  // Minat disimpan untuk ditampilkan kembali nanti:
+  // "Antusias mengeksplorasi AI Engineering dan Web Development."
+  // Minat tambahan: Cyber Security.
   about: [
     "Saya adalah mahasiswa semester akhir di jurusan Informatika, memiliki ketertarikan khusus pada bidang kecerdasan buatan (AI) dan pengembangan web. Saat ini sedang aktif membangun fondasi pengetahuan di bidang pemrograman, struktur data, dan algoritma, sekaligus mengeksplorasi berbagai teknologi modern untuk menciptakan solusi digital yang inovatif.",
   ],
   marquee: [
-    "AI Engineer",
-    "Web Developer",
     "Next.js",
     "Laravel",
     "TypeScript",
@@ -65,34 +66,34 @@ export const profile: Profile = {
     {
       title: "kawasanAI",
       summary:
-        "Chat pribadi berbasis Next.js dengan pemilihan model dan riwayat percakapan.",
+        "Ruang percakapan AI pribadi untuk mengeksplorasi berbagai model dalam satu aplikasi. Dibangun dengan Next.js, dilengkapi pilihan model dan riwayat agar percakapan mudah dilanjutkan.",
       tags: ["Next.js", "TypeScript", "Supabase"],
       demo: "https://kawasan-ai.vercel.app",
       repo: "https://github.com/ndikkkk/kawasanAI",
     },
     {
       title: "Hakim Printing",
-      summary: "Aplikasi web Laravel, dikerjakan sebagai proyek PPL.",
+      summary: "Proyek aplikasi web Hakim Printing yang dikembangkan dalam kegiatan PPL. Menggunakan Laravel dan Blade sebagai penerapan pengembangan web dalam konteks usaha percetakan.",
       tags: ["Laravel", "Blade"],
       repo: "https://github.com/ndikkkk/Hakim-Printing",
     },
     {
       title: "Inventory Laravel",
       summary:
-        "Aplikasi untuk mengoordinir inventaris di BKPSDM Boyolali, dikerjakan saat magang.",
+        "Aplikasi pengelolaan inventaris untuk BKPSDM Boyolali yang dikembangkan saat magang. Menggunakan Laravel dan JavaScript untuk mendukung koordinasi inventaris dalam lingkungan instansi.",
       tags: ["Laravel", "JavaScript"],
       repo: "https://github.com/ndikkkk/inventory-laravel",
     },
     {
       title: "iCoin App",
-      summary: "Aplikasi untuk memantau harga saham, mirip aplikasi trading.",
+      summary: "Aplikasi pemantauan harga saham dengan pendekatan tampilan seperti aplikasi trading. Dikembangkan menggunakan JavaScript untuk mengeksplorasi penyajian informasi harga dalam antarmuka web.",
       tags: ["JavaScript"],
       repo: "https://github.com/ndikkkk/iCoin-App",
     },
     {
       title: "Wireless Mobile Computing",
       summary:
-        "Sistem komunikasi data koneksi lokal antar ESP32 untuk daerah yang sulit sinyal.",
+        "Eksplorasi komunikasi data lokal antarperangkat ESP32 untuk wilayah yang sulit mendapatkan sinyal. Dibangun dengan C++ sebagai pendekatan konektivitas melalui jaringan lokal.",
       tags: ["C++", "ESP32"],
       repo: "https://github.com/ndikkkk/Wireless-Mobile-Computing",
     },
@@ -105,6 +106,14 @@ export const profile: Profile = {
     {
       title: "Sertifikat Dicoding",
       url: "/photos/Sertifikat%20Dicoding.pdf",
+    },
+    {
+      title: "Sertifikat Peserta Gemini Academy for University Student",
+      url: "/photos/Sertifikat%20Peserta%20Gemini%20Academy%20for%20University%20Student.pdf",
+    },
+    {
+      title: "Sertifikat Gemini untuk Mahasiswa",
+      url: "/photos/sertifikat%20gemini%20university%20student.pdf",
     },
   ],
   tools: {

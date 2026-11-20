@@ -789,7 +789,7 @@ const Lanyard = ({
     const canvas = renderer.domElement;
     canvas.className = 'lanyard-canvas';
     canvas.setAttribute('aria-hidden', 'true');
-    container.appendChild(canvas);
+    document.body.appendChild(canvas);
 
     const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     const scene = new THREE.Scene();
@@ -938,6 +938,8 @@ const Lanyard = ({
       if (viewHeight * aspect < minimumWidth) viewHeight = minimumWidth / aspect;
       const viewWidth = viewHeight * aspect;
       camera.aspect = aspect;
+      const rect = container.getBoundingClientRect();
+      camera.setViewOffset(view.width, view.height, -rect.left, -rect.top, window.innerWidth, window.innerHeight);
       camera.position.set(0, 0, viewHeight / 2 / Math.tan((FOV * Math.PI) / 360));
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
@@ -1194,8 +1196,12 @@ const Lanyard = ({
     };
 
     const setCursor = (value: string) => {
-      if (canvas.style.cursor !== value) canvas.style.cursor = value;
+      document.body.classList.toggle('lanyard-hovering', value === 'grab');
+      document.body.classList.toggle('lanyard-dragging', value === 'grabbing');
     };
+
+    const isControl = (target: EventTarget | null) => target instanceof Element &&
+      !!target.closest('a, button, input, textarea, select, [role="dialog"], [data-slot="sheet-overlay"]');
 
     const flip = (point: THREE.Vector3) => {
       const body = sim.body;
@@ -1210,7 +1216,7 @@ const Lanyard = ({
     };
 
     const onPointerDown = (event: PointerEvent) => {
-      if (!settingsRef.current?.interactive || event.button > 0) return;
+      if (!settingsRef.current?.interactive || event.button > 0 || sim.grab || isControl(event.target)) return;
       toPointer(event);
       const hit = pickCard();
       if (!hit) return;
@@ -1222,7 +1228,6 @@ const Lanyard = ({
         target: hit.point.clone()
       };
       press = { x: event.clientX, y: event.clientY, time: performance.now(), point: hit.point.clone() };
-      canvas.setPointerCapture?.(event.pointerId);
       setCursor('grabbing');
       event.preventDefault();
       start();
@@ -1238,7 +1243,7 @@ const Lanyard = ({
         return;
       }
       if (event.pointerType === 'touch') return;
-      hovering = !!pickCard();
+      hovering = !isControl(event.target) && !!pickCard();
       setCursor(hovering ? 'grab' : '');
     };
 
@@ -1247,34 +1252,44 @@ const Lanyard = ({
       sim.grab = null;
       if (press && event.type === 'pointerup' && performance.now() - press.time < 450) flip(press.point);
       press = null;
-      canvas.releasePointerCapture?.(event.pointerId);
       setCursor(hovering && event.pointerType !== 'touch' ? 'grab' : '');
       start();
     };
 
     const onTouchStart = (event: TouchEvent) => {
-      if (!settingsRef.current?.interactive || event.touches.length !== 1) return;
+      if (!settingsRef.current?.interactive || event.touches.length !== 1 || isControl(event.target)) return;
       toPointer(event.touches[0]);
       if (pickCard()) event.preventDefault();
     };
 
-    canvas.addEventListener('pointerdown', onPointerDown);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerup', onPointerUp);
-    canvas.addEventListener('pointercancel', onPointerUp);
-    canvas.addEventListener('lostpointercapture', onPointerUp);
-    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    const onTouchMove = (event: TouchEvent) => {
+      if (sim.grab && event.cancelable) event.preventDefault();
+    };
+
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+    document.addEventListener('pointercancel', onPointerUp);
+    document.addEventListener('touchstart', onTouchStart, { passive: false });
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
 
     const resize = () => {
       view.width = Math.max(1, container.clientWidth);
       view.height = Math.max(1, container.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setSize(view.width, view.height, false);
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
       apply();
       render();
     };
 
     const resizeObserver = new ResizeObserver(resize);
+    const onScroll = () => {
+      const rect = container.getBoundingClientRect();
+      camera.setViewOffset(view.width, view.height, -rect.left, -rect.top, window.innerWidth, window.innerHeight);
+      render();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', resize);
     resizeObserver.observe(container);
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -1296,12 +1311,15 @@ const Lanyard = ({
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerup', onPointerUp);
-      canvas.removeEventListener('pointercancel', onPointerUp);
-      canvas.removeEventListener('lostpointercapture', onPointerUp);
-      canvas.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', resize);
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointercancel', onPointerUp);
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchmove', onTouchMove);
+      setCursor('');
       [bodyMesh, frontMesh, backMesh, ring, clampMesh, eyelet, band].forEach(mesh => mesh.geometry?.dispose());
       [frontMaterial, backMaterial, edgeMaterial, metalMaterial, bandMaterial].forEach(material => material.dispose());
       [frontTexture, backTexture, strapTexture, grain, weave].forEach(texture => texture.dispose());
