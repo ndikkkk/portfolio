@@ -11,6 +11,11 @@ export interface Achievement {
   issuer?: string;
   date?: string;
   url?: string;
+  image?: string;
+  year?: string;
+  credentialId?: string;
+  validUntil?: string;
+  category?: string;
 }
 
 export interface Profile {
@@ -101,14 +106,17 @@ export const profile: Profile = {
   achievements: [
     {
       title: "Sertifikasi Cybersecurity",
+      image: "/photos/certificate-cybersecurity.png",
       url: "/photos/Sertifikasi%20Cybersecurity.pdf",
     },
     {
       title: "Sertifikat Dicoding",
+      image: "/photos/certificate-dicoding.png",
       url: "/photos/Sertifikat%20Dicoding.pdf",
     },
     {
       title: "Sertifikat Peserta Gemini Academy for University Student",
+      image: "/photos/certificate-gemini-academy.png",
       url: "/photos/Sertifikat%20Peserta%20Gemini%20Academy%20for%20University%20Student.pdf",
     },
     {
