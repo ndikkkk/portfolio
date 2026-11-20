@@ -1,0 +1,26 @@
+﻿10032	Antigravity IDE	426.78125
+14216	Antigravity IDE	371.53125
+4176	Antigravity IDE	209.390625
+9292	explorer	155.5625
+9616	HDSentinel	114.75
+12620	Antigravity IDE	111
+8028	ipf_helper	68.46875
+13252	QuickLook	50.359375
+13536	ctfmon	39.34375
+6684	TextInputHost	38.171875
+2064	Antigravity IDE	36.4375
+9024	sihost	30.0625
+14932	Antigravity IDE	24.484375
+10256	svchost	14.515625
+10092	PowerMgr	13.265625
+11532	StartMenuExperienceHost	12.640625
+7052	ShellExperienceHost	12.4375
+11508	SearchHost	12.25
+12536	msedgewebview2	11.75
+7392	Antigravity IDE	11.015625
+9376	svchost	10.9375
+18032	Antigravity IDE	9.03125
+12088	RuntimeBroker	8.34375
+13936	msedgewebview2	7.328125
+5932	svchost	6.875
+

@@ -17,6 +17,7 @@ export interface TextLoopProps {
   direction?: "forward" | "reverse";
   separator?: string;
   curviness?: number;
+  waveLength?: number;
   tilt?: number;
   fontSize?: number;
   fontWeight?: number;
@@ -34,7 +35,7 @@ export interface TextLoopProps {
 
 const wrap = (value: number, length: number) => ((value % length) + length) % length;
 
-const buildPath = (shape: Shape, curviness: number, ribbonWidth: number) => {
+const buildPath = (shape: Shape, curviness: number, ribbonWidth: number, waveLength: number) => {
   const room = Math.max(20, CY - ribbonWidth / 2 - 6);
   const amplitude = Math.min(Math.max(0, curviness) * 2.2, room * 2);
 
@@ -60,8 +61,20 @@ const buildPath = (shape: Shape, curviness: number, ribbonWidth: number) => {
     case "line":
       return `M -320 ${CY} L ${VIEW_W + 320} ${CY}`;
     case "wave":
-    default:
-      return `M -320 ${CY} Q -160 ${CY - amplitude} 0 ${CY} T 320 ${CY} T 640 ${CY} T 960 ${CY} T 1280 ${CY} T ${VIEW_W + 320} ${CY}`;
+    default: {
+      // Gelombang dari rangkaian kurva kuadratik: tiap segmen selebar setengah panjang
+      // gelombang, titik kontrolnya bergantian di atas dan di bawah garis tengah.
+      const half = Math.max(40, waveLength) / 2;
+      const start = -320;
+      const segments = Math.ceil((VIEW_W + 640) / half);
+      let path = `M ${start} ${CY}`;
+      for (let index = 0; index < segments; index += 1) {
+        const x0 = start + index * half;
+        const peak = index % 2 === 0 ? CY - amplitude : CY + amplitude;
+        path += ` Q ${x0 + half / 2} ${peak} ${x0 + half} ${CY}`;
+      }
+      return path;
+    }
   }
 };
 
@@ -73,6 +86,7 @@ export default function TextLoop({
   direction = "forward",
   separator = "✦",
   curviness = 90,
+  waveLength = 640,
   tilt = 0,
   fontSize = 46,
   fontWeight = 800,
@@ -99,8 +113,8 @@ export default function TextLoop({
   const pathId = `text-loop-${rawId}`;
 
   const d = useMemo(
-    () => path || buildPath(shape, curviness, ribbonWidth),
-    [path, shape, curviness, ribbonWidth],
+    () => path || buildPath(shape, curviness, ribbonWidth, waveLength),
+    [path, shape, curviness, ribbonWidth, waveLength],
   );
   const unit = useMemo(() => {
     const phrase = uppercase ? text.toUpperCase() : text;
@@ -249,7 +263,7 @@ export default function TextLoop({
       root.removeEventListener("pointerup", up);
       root.removeEventListener("pointercancel", up);
     };
-  }, [metrics, speed, direction, pauseOnHover, draggable, path, shape, curviness, ribbonWidth, tilt]);
+  }, [metrics, speed, direction, pauseOnHover, draggable, path, shape, curviness, ribbonWidth, waveLength, tilt]);
 
   const loopText = unit.repeat(metrics.repetitions);
   const paint = color || (ribbon ? "#ffffff" : "currentColor");
