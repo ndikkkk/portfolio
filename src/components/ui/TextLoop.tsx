@@ -62,15 +62,16 @@ const buildPath = (shape: Shape, curviness: number, ribbonWidth: number, waveLen
       return `M -320 ${CY} L ${VIEW_W + 320} ${CY}`;
     case "wave":
     default: {
-      // Rantai kurva kuadratik dengan perintah T: titik kontrol tiap segmen adalah pantulan
-      // segmen sebelumnya, jadi hasilnya gelombang halus tanpa sudut, seperti contoh React Bits.
-      // Simpangan puncak hanya setengah jarak ke titik kontrol, yaitu amplitude / 2.
-      const half = Math.max(80, waveLength) / 2;
+      // Gelombang dari rangkaian kurva kuadratik: tiap segmen selebar setengah panjang
+      // gelombang, titik kontrolnya bergantian di atas dan di bawah garis tengah.
+      const half = Math.max(40, waveLength) / 2;
       const start = -320;
-      const segments = Math.max(2, Math.ceil((VIEW_W + 640) / half));
-      let path = `M ${start} ${CY} Q ${start + half / 2} ${CY - amplitude} ${start + half} ${CY}`;
-      for (let index = 1; index < segments; index += 1) {
-        path += ` T ${start + half * (index + 1)} ${CY}`;
+      const segments = Math.ceil((VIEW_W + 640) / half);
+      let path = `M ${start} ${CY}`;
+      for (let index = 0; index < segments; index += 1) {
+        const x0 = start + index * half;
+        const peak = index % 2 === 0 ? CY - amplitude : CY + amplitude;
+        path += ` Q ${x0 + half / 2} ${peak} ${x0 + half} ${CY}`;
       }
       return path;
     }
