@@ -13,6 +13,7 @@ export function Opening() {
           timeZone: "Asia/Jakarta",
           hour: "2-digit",
           minute: "2-digit",
+          second: "2-digit",
           hour12: false,
         })
         .replace(/\./g, ":");
@@ -40,7 +41,7 @@ export function Opening() {
         mediaZoom={1.2}
         scrollDistance={0.8}
         holdDistance={0.2}
-        overlayScrim={0.25}
+        overlayScrim={1}
         intro={
           <div className="flex h-full w-full flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-16 select-none">
             {/* Top Bar */}
