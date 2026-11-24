@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Lanyard from "@/components/ui/lanyard";
+import TechText from "@/components/ui/tech-text";
 import { profile } from "@/data/profile";
 
 interface DecorationItemConfig {
@@ -311,7 +312,26 @@ export function Hero() {
             Halo, saya
           </span>
 
-          <h1 className="font-bold text-ink">{profile.name}</h1>
+          <h1 className="sr-only">{profile.name}</h1>
+
+          <div
+            aria-hidden="true"
+            className="relative h-[clamp(8rem,24vw,14rem)] w-full"
+          >
+            <TechText
+              text={profile.name}
+              fontWeight={600}
+              fontSize={150}
+              reveal="letter"
+              dashLength={4}
+              dashGap={2}
+              specks={15}
+              intro="none"
+              introDuration={2}
+              clickKick
+              guides={false}
+            />
+          </div>
 
           <p className="max-w-2xl text-lg font-medium text-muted sm:text-xl">
             {profile.tagline}
