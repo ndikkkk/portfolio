@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Opening } from "@/components/sections/opening";
@@ -10,6 +11,7 @@ import { Contact } from "@/components/sections/contact";
 import { Tools } from "@/components/sections/tools";
 import { WhatsAppIcon } from "@/components/icons";
 import { whatsAppChatHref } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 function SkipToContent() {
   return (
@@ -23,13 +25,41 @@ function SkipToContent() {
 }
 
 function FloatingWhatsApp() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const opening = document.getElementById("opening");
+      if (!opening) {
+        setVisible(true);
+        return;
+      }
+      const rect = opening.getBoundingClientRect();
+      // Muncul ketika scroll sudah melewati opening dan tiba di halaman pertama (Hero)
+      setVisible(rect.bottom <= window.innerHeight + 40);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
   return (
     <a
       href={whatsAppChatHref()}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat lewat WhatsApp"
-      className="fixed bottom-5 right-5 z-40 inline-flex size-14 items-center justify-center rounded-full border-[var(--border-w)] border-ink bg-green text-on-accent shadow-[var(--shadow)] transition-transform duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--ink)] active:translate-x-1 active:translate-y-1 active:shadow-none"
+      className={cn(
+        "fixed bottom-5 right-5 z-40 inline-flex size-14 items-center justify-center rounded-full border-[var(--border-w)] border-ink bg-green text-on-accent shadow-[var(--shadow)] transition-all duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--ink)] active:translate-x-1 active:translate-y-1 active:shadow-none",
+        visible
+          ? "pointer-events-auto scale-100 opacity-100 translate-y-0"
+          : "pointer-events-none scale-75 opacity-0 translate-y-6"
+      )}
     >
       <WhatsAppIcon className="size-7" />
     </a>

@@ -23,6 +23,7 @@ export interface Profile {
   role: string;
   tagline: string;
   photo?: string;
+  openingPhoto?: string;
   photoPixel?: string;
   about: string[];
   marquee: string[];
@@ -42,6 +43,7 @@ export interface Profile {
 export const profile: Profile = {
   name: "Andhikaalvn",
   photo: "/photos/portrait.webp",
+  openingPhoto: "/photos/IMG_0181.jpg",
   photoPixel: "/photos/portrait-pixel.webp",
   role: "Mahasiswa Informatika",
   tagline: "Mahasiswa S1 Informatika Universitas Sebelas Maret",

@@ -26,7 +26,8 @@ interface ScrollExpandProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
   mediaType?: MediaType;
   poster?: string;
   alt?: string;
-  title?: string;
+  title?: ReactNode;
+  intro?: ReactNode;
   scrollHint?: string;
   startWidth?: number;
   startHeight?: number;
@@ -64,6 +65,7 @@ export default function ScrollExpand({
   poster = "",
   alt = "",
   title = "",
+  intro,
   scrollHint = "",
   startWidth = 42,
   startHeight = 58,
@@ -86,6 +88,8 @@ export default function ScrollExpand({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
+  const coverRef = useRef<HTMLDivElement | null>(null);
+  const introRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const scrimRef = useRef<HTMLDivElement | null>(null);
@@ -141,12 +145,26 @@ export default function ScrollExpand({
 
     media.style.transform = `scale(${c.mediaZoom + (1 - c.mediaZoom) * eased})`;
 
-    if (scrimRef.current) scrimRef.current.style.opacity = `${c.overlayScrim * eased}`;
+    if (coverRef.current) {
+      const coverOut = smoothstep(0, 0.45, progress);
+      coverRef.current.style.opacity = `${1 - coverOut}`;
+    }
+
+    if (introRef.current) {
+      const out = smoothstep(0.08, 0.45, progress);
+      introRef.current.style.opacity = `${1 - out}`;
+      introRef.current.style.transform = `translate3d(0, ${-24 * out}px, 0)`;
+    }
+
+    if (scrimRef.current) {
+      const enter = smoothstep(0.4, 0.9, progress);
+      scrimRef.current.style.opacity = `${c.overlayScrim * enter}`;
+    }
 
     if (titleRef.current) {
-      const out = smoothstep(0.4, 0.88, progress);
+      const out = smoothstep(0.12, 0.5, progress);
       titleRef.current.style.opacity = `${1 - out}`;
-      titleRef.current.style.transform = `translate3d(0, ${-28 * out}px, 0) scale(${1 + 0.06 * out})`;
+      titleRef.current.style.transform = `translate3d(0, ${-24 * out}px, 0) scale(${1 + 0.04 * out})`;
     }
 
     if (hintRef.current) {
@@ -288,6 +306,7 @@ export default function ScrollExpand({
         <div ref={stageRef} className="scroll-expand__stage">
           <div ref={frameRef} className="scroll-expand__frame">
             {media}
+            <div ref={coverRef} className="scroll-expand__cover" />
             <div ref={scrimRef} className="scroll-expand__scrim" />
             {children ? (
               <div ref={overlayRef} className="scroll-expand__overlay">
@@ -295,7 +314,11 @@ export default function ScrollExpand({
               </div>
             ) : null}
           </div>
-          {title ? (
+          {intro ? (
+            <div ref={introRef} className="scroll-expand__intro">
+              {intro}
+            </div>
+          ) : title ? (
             <div ref={titleRef} className="scroll-expand__title">
               {title}
             </div>

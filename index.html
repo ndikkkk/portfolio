@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +9,7 @@
       content="Portofolio Andhikaalvn."
     />
     <meta name="author" content="Andhikaalvn" />
-    <meta name="theme-color" content="#fff8e7" />
+    <meta name="theme-color" content="#16161a" />
     <link rel="canonical" href="https://andhikaalvn.vercel.app/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -49,14 +49,15 @@
     <script>
       (function () {
         try {
-          var stored = localStorage.getItem("theme");
-          var dark =
-            stored === "dark" ||
-            ((stored !== "light" && stored !== "dark") &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches);
-          if (dark) document.documentElement.classList.add("dark");
+          var stored = localStorage.getItem("theme_v2");
+          var dark = stored ? stored === "dark" : true;
+          if (dark) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
         } catch (e) {
-          /* localStorage mungkin diblokir */
+          document.documentElement.classList.add("dark");
         }
       })();
     </script>

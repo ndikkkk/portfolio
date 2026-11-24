@@ -4,10 +4,18 @@ import { flushSync } from "react-dom";
 export type Theme = "light" | "dark";
 
 function getInitialTheme(): Theme {
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem("theme_v2");
+      if (stored === "light" || stored === "dark") return stored;
+    } catch {
+      // ignore
+    }
+  }
   if (typeof document !== "undefined" && document.documentElement.classList.contains("dark")) {
     return "dark";
   }
-  return "light";
+  return "dark";
 }
 
 export function useTheme() {
@@ -18,6 +26,7 @@ export function useTheme() {
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     try {
+      localStorage.setItem("theme_v2", theme);
       localStorage.setItem("theme", theme);
     } catch {
       // localStorage dapat diblokir, abaikan
