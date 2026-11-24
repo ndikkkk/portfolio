@@ -1,0 +1,50 @@
+.wave-marquee {
+  --wave-marquee-duration: 26s;
+  --wave-marquee-shift: -1000px;
+}
+
+.wave-marquee__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wave-marquee__track {
+  animation: wave-marquee-scroll var(--wave-marquee-duration) linear infinite;
+}
+
+.wave-marquee__ribbon,
+.wave-marquee__outline {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wave-marquee__outline {
+  stroke: var(--ink);
+}
+
+.wave-marquee__ribbon {
+  stroke: var(--yellow);
+}
+
+.wave-marquee__label,
+.wave-marquee__sparkle {
+  fill: var(--on-accent);
+  text-anchor: middle;
+}
+
+@keyframes wave-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--wave-marquee-shift));
+  }
+}
+
+@media (hover: hover) {
+  .wave-marquee:hover .wave-marquee__track {
+    animation-play-state: paused;
+  }
+}
