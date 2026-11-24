@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { Opening } from "@/components/sections/opening";
 import { Hero } from "@/components/sections/hero";
 import { Marquee } from "@/components/sections/marquee";
 import { About } from "@/components/sections/about";
@@ -39,6 +40,7 @@ export default function App() {
   return (
     <>
       <SkipToContent />
+      <Opening />
       <Navbar />
 
       <main id="main-content">
