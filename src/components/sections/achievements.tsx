@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 
 export function Achievements() {
   return (
-      <section id="achievements" className="bg-bg px-4 py-24 sm:px-6 lg:px-8">
+      <section id="achievements" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <h2 className="font-bold">Pencapaian</h2>

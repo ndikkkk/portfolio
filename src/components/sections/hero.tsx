@@ -344,7 +344,7 @@ export function Hero() {
                 <ArrowRight aria-hidden="true" />
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="blue">
               <a href="#contact">
                 Hubungi saya
                 <Mail aria-hidden="true" />

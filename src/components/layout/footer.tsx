@@ -13,7 +13,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t-[var(--border-w)] border-ink bg-surface">
+    <footer className="border-t-[var(--border-w)] border-ink bg-bg">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-8 sm:px-6 lg:px-8">
         <p className="font-bold">{profile.name}</p>
 

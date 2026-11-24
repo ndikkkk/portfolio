@@ -19,7 +19,7 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" className="bg-bg px-4 py-24 sm:px-6 lg:px-8">
+    <section id="contact" className="bg-surface px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="font-bold">Kontak</h2>
