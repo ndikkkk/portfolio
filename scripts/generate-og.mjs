@@ -3,32 +3,52 @@
 import { deflateSync } from "node:zlib";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const INK = [17, 17, 17];
-const CREAM = [255, 248, 231];
-const SURFACE = [255, 255, 255];
-const YELLOW = [255, 212, 59];
-const PINK = [255, 143, 177];
+const hex = (h) => [
+  parseInt(h.slice(1, 3), 16),
+  parseInt(h.slice(3, 5), 16),
+  parseInt(h.slice(5, 7), 16),
+];
 
-// Font bitmap 5x7. '#' berarti piksel terisi.
+const INK = hex("#111111");
+const CREAM = hex("#FFF8E7");
+const SURFACE = hex("#FFFFFF");
+const YELLOW = hex("#FFD43B");
+const PINK = hex("#FF8FB1");
+
+// Font bitmap 5x7 lengkap (A-Z dan tanda baca)
 const FONT = {
   A: [".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"],
   B: ["####.", "#...#", "#...#", "####.", "#...#", "#...#", "####."],
+  C: [".###.", "#...#", "#....", "#....", "#....", "#...#", ".###."],
   D: ["####.", "#...#", "#...#", "#...#", "#...#", "#...#", "####."],
   E: ["#####", "#....", "#....", "####.", "#....", "#....", "#####"],
   F: ["#####", "#....", "#....", "####.", "#....", "#....", "#...."],
   G: [".###.", "#...#", "#....", "#.###", "#...#", "#...#", ".###."],
   H: ["#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"],
   I: ["#####", "..#..", "..#..", "..#..", "..#..", "..#..", "#####"],
+  J: ["..###", "...#.", "...#.", "...#.", "#..#.", "#..#.", ".##.."],
   K: ["#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#"],
   L: ["#....", "#....", "#....", "#....", "#....", "#....", "#####"],
+  M: ["#...#", "##.##", "#.#.#", "#...#", "#...#", "#...#", "#...#"],
   N: ["#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#", "#...#"],
   O: [".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."],
   P: ["####.", "#...#", "#...#", "####.", "#....", "#....", "#...."],
+  Q: [".###.", "#...#", "#...#", "#...#", "#.#.#", "#..#.", ".##.#"],
   R: ["####.", "#...#", "#...#", "####.", "#.#..", "#..#.", "#...#"],
+  S: [".###.", "#...#", "#....", ".###.", "....#", "#...#", ".###."],
   T: ["#####", "..#..", "..#..", "..#..", "..#..", "..#..", "..#.."],
+  U: ["#...#", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."],
   V: ["#...#", "#...#", "#...#", "#...#", "#...#", ".#.#.", "..#.."],
   W: ["#...#", "#...#", "#...#", "#...#", "#.#.#", "#.#.#", ".#.#."],
+  X: ["#...#", "#...#", ".#.#.", "..#..", ".#.#.", "#...#", "#...#"],
+  Y: ["#...#", "#...#", ".#.#.", "..#..", "..#..", "..#..", "..#.."],
+  Z: ["#####", "....#", "...#.", "..#..", ".#...", "#....", "#####"],
+  "-": [".....", ".....", ".....", "#####", ".....", ".....", "....."],
+  ",": [".....", ".....", ".....", ".....", ".....", "..#..", ".#..."],
+  ".": [".....", ".....", ".....", ".....", ".....", "..#..", "..#.."],
+  "'": ["..#..", "..#..", ".#...", ".....", ".....", ".....", "....."],
   "&": [".###.", "#...#", "#..#.", ".#...", "#.#.#", "#...#", ".###."],
+  "/": ["....#", "...#.", "...#.", "..#..", ".#...", ".#...", "#...."],
   " ": [".....", ".....", ".....", ".....", ".....", ".....", "....."],
 };
 
@@ -37,9 +57,7 @@ function render(w, h, draw) {
   const set = (x, y, c) => {
     if (x < 0 || y < 0 || x >= w || y >= h) return;
     const i = (y * w + x) * 3;
-    buf[i] = c[0];
-    buf[i + 1] = c[1];
-    buf[i + 2] = c[2];
+    buf.set(c, i);
   };
   const fill = (x, y, ww, hh, c) => {
     for (let yy = y; yy < y + hh; yy += 1) {
@@ -48,7 +66,7 @@ function render(w, h, draw) {
   };
   const text = (str, x, y, scale, c) => {
     let cx = x;
-    for (const ch of str) {
+    for (const ch of str.toUpperCase()) {
       const g = FONT[ch] || FONT[" "];
       for (let r = 0; r < 7; r += 1) {
         const row = g[r];
@@ -59,7 +77,26 @@ function render(w, h, draw) {
       cx += 6 * scale;
     }
   };
-  draw({ fill, text });
+  const wrapText = (str, x, y, scale, maxWidth, lineHeight, c) => {
+    const words = str.split(" ");
+    let line = "";
+    let cy = y;
+    const charWidth = 6 * scale;
+
+    for (const word of words) {
+      const testLine = line ? `${line} ${word}` : word;
+      if (testLine.length * charWidth > maxWidth && line) {
+        text(line, x, cy, scale, c);
+        line = word;
+        cy += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    if (line) text(line, x, cy, scale, c);
+  };
+
+  draw({ fill, text, wrapText });
   return buf;
 }
 
@@ -95,16 +132,18 @@ function writePng(file, pix, w, h) {
   const stride = w * 3;
   const raw = Buffer.alloc((stride + 1) * h);
   for (let y = 0; y < h; y += 1) {
-    raw[y * (stride + 1)] = 0;
+    raw.writeUInt8(0, y * (stride + 1));
     pix.copy(raw, y * (stride + 1) + 1, y * stride, y * stride + stride);
   }
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(w, 0);
   ihdr.writeUInt32BE(h, 4);
-  ihdr[8] = 8; // bit depth
-  ihdr[9] = 2; // color type RGB
+  ihdr.writeUInt8(8, 8); // bit depth
+  ihdr.writeUInt8(2, 9); // color type RGB
+
+  const signature = Buffer.from("89504e470d0a1a0a", "hex");
   const png = Buffer.concat([
-    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    signature,
     chunk("IHDR", ihdr),
     chunk("IDAT", deflateSync(raw, { level: 9 })),
     chunk("IEND", Buffer.alloc(0)),
@@ -116,31 +155,53 @@ function writePng(file, pix, w, h) {
 mkdirSync("public", { recursive: true });
 
 // og-image 1200 x 630
-const og = render(1200, 630, ({ fill, text }) => {
+const og = render(1200, 630, ({ fill, text, wrapText }) => {
   fill(0, 0, 1200, 630, CREAM);
-  fill(40, 40, 1152, 582, INK); // bayangan
-  fill(24, 24, 1152, 582, INK); // kerangka
-  fill(28, 28, 1144, 574, SURFACE); // isi kartu
+  fill(40, 40, 1136, 566, INK); // bayangan
+  fill(24, 24, 1136, 566, INK); // kerangka
+  fill(28, 28, 1128, 558, SURFACE); // isi kartu
 
+  // Dekorasi kotak kanan atas
   fill(1016, 72, 96, 96, INK);
   fill(1020, 76, 88, 88, YELLOW);
-  fill(1084, 196, 72, 72, INK);
-  fill(1088, 200, 64, 64, PINK);
+  fill(1064, 196, 72, 72, INK);
+  fill(1068, 200, 64, 64, PINK);
 
-  fill(61, 297, 140, 10, INK);
-  fill(65, 301, 132, 6, YELLOW);
+  // Badge label kecil di atas nama
+  fill(64, 76, 360, 44, INK);
+  fill(60, 72, 360, 44, YELLOW);
+  fill(60, 72, 360, 3, INK);
+  fill(60, 113, 360, 3, INK);
+  fill(60, 72, 3, 44, INK);
+  fill(417, 72, 3, 44, INK);
+  text("PERSONAL PORTFOLIO", 80, 84, 3, INK);
 
-  text("ANDHIKAALVN", 60, 180, 9, INK);
-  text("Antusias mengeksplorasi AI Engineering dan Web Development.", 60, 342, 3, INK);
+  // Nama utama
+  text("ANDHIKAALVN", 60, 160, 11, INK);
+
+  // Garis pemisah kuning
+  fill(64, 274, 180, 12, INK);
+  fill(60, 270, 180, 12, YELLOW);
+
+  // Deskripsi dengan auto word-wrap
+  wrapText(
+    "JUST AN INFORMATICS STUDENT SHARING COOL STUFF I'VE BUILT, MILESTONES, AND MY GO-TO TOOLS.",
+    60,
+    325,
+    3,
+    980,
+    36,
+    INK
+  );
 });
 writePng("public/og-image.png", og, 1200, 630);
 
 // apple-touch-icon 180 x 180
 const icon = render(180, 180, ({ fill, text }) => {
   fill(0, 0, 180, 180, CREAM);
-  fill(12, 12, 156, 156, INK);
-  fill(4, 4, 156, 156, INK);
-  fill(10, 10, 144, 144, YELLOW);
-  text("A", 50, 34, 16, INK);
+  fill(22, 22, 144, 144, INK); // bayangan
+  fill(14, 14, 144, 144, INK); // border luar
+  fill(18, 18, 136, 136, YELLOW); // isi kotak
+  text("A", 46, 30, 16, INK);
 });
 writePng("public/apple-touch-icon.png", icon, 180, 180);
