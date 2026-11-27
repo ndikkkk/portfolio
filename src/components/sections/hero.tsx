@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, useRef, type ReactNode } from "react";
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Lanyard from "@/components/ui/lanyard";
@@ -274,7 +274,9 @@ function generateDecorations(): PlacedDecoration[] {
 }
 
 export function Hero() {
-    const [decorations] = useState<PlacedDecoration[]>(() => generateDecorations());
+  const [decorations] = useState<PlacedDecoration[]>(() => generateDecorations());
+  const cardSlotRef = useRef<HTMLDivElement>(null);
+
   return (
     <section
       id="home"
@@ -289,7 +291,7 @@ export function Hero() {
       {/* Elemen dekoratif: stiker & bentuk geometris acak tanpa saling menumpuk */}
       <div
         aria-hidden="true"
-                className="pointer-events-none absolute inset-0 overflow-hidden font-mono text-xs select-none sm:text-sm"
+        className="pointer-events-none absolute inset-0 overflow-hidden font-mono text-xs select-none sm:text-sm"
       >
         {decorations.map((item) => (
           <div
@@ -304,6 +306,20 @@ export function Hero() {
             {item.render()}
           </div>
         ))}
+      </div>
+
+      {/* Lanyard canvas mengisi halaman pertama tanpa batas kotak kecil, kartu tetap ukuran kompak sesuai slot kolom kanan */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Lanyard
+          slotRef={cardSlotRef}
+          frontImage={profile.photo}
+          backImage={profile.photo}
+          size={0.68}
+          strapColor="#111111"
+          cardColor="#ffffff"
+          finish="matte"
+          breeze={0.2}
+        />
       </div>
 
       <div className="relative mx-auto grid min-h-[70dvh] w-full max-w-6xl items-center gap-4 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)] md:gap-8">
@@ -354,20 +370,10 @@ export function Hero() {
         </div>
 
         <div
+          ref={cardSlotRef}
           aria-label="Kartu foto profil interaktif"
-          className="mx-auto h-[min(58dvh,30rem)] min-h-80 w-full max-w-md md:h-[min(70dvh,38rem)] md:min-h-[28rem]"
-        >
-          <Lanyard
-            frontImage={profile.photo}
-            backImage={profile.photo}
-            size={0.68}
-            anchor="center"
-            strapColor="#111111"
-            cardColor="#ffffff"
-            finish="matte"
-            breeze={0.2}
-          />
-        </div>
+          className="pointer-events-none mx-auto h-[min(58dvh,30rem)] min-h-80 w-full max-w-md md:h-[min(70dvh,38rem)] md:min-h-[28rem]"
+        />
       </div>
     </section>
   );

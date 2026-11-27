@@ -10,11 +10,15 @@ type Settings = {
  frontImage?: string; backImage?: string; strapImage?: string;
  imageFit: 'cover' | 'contain'; cardColor: string;
  orientation: 'portrait' | 'landscape'; finish: 'glossy' | 'matte' | 'holographic' | 'metallic';
- cornerRadius: number; size: number; anchor: 'left' | 'center' | 'right';
+ cornerRadius: number; size: number; anchor: 'left' | 'center' | 'right' | number;
  strapLength: number; strapColor: string; strapWidth: number; metal: 'silver' | 'gold' | 'graphite';
  gravity: number; damping: number; elasticity: number; breeze: number; interactive: boolean; intro: boolean;
 };
-type Props = Partial<Settings> & { className?: string; style?: CSSProperties };
+type Props = Partial<Settings> & {
+  className?: string;
+  style?: CSSProperties;
+  slotRef?: React.RefObject<HTMLElement | null>;
+};
 type Grab = { local: THREE.Vector3; rotation: THREE.Quaternion; reach: number; from: THREE.Vector3; target: THREE.Vector3 };
 type Simulation = ReturnType<typeof createSimulation>;
 type Body = Simulation['body'];
@@ -738,6 +742,7 @@ const Lanyard = ({
   breeze = 0.5,
   interactive = true,
   intro = true,
+  slotRef,
   className = '',
   style
 }: Props) => {
@@ -789,7 +794,7 @@ const Lanyard = ({
     const canvas = renderer.domElement;
     canvas.className = 'lanyard-canvas';
     canvas.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(canvas);
+    container.appendChild(canvas);
 
     const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     const scene = new THREE.Scene();
@@ -932,29 +937,95 @@ const Lanyard = ({
     const frameView = () => {
       const s = settingsRef.current;
       if (!s) return;
-      const aspect = view.width / view.height;
-      let viewHeight = layout.height / clamp(s.size, 0.15, 0.9);
-      const minimumWidth = layout.width / 0.72;
-      if (viewHeight * aspect < minimumWidth) viewHeight = minimumWidth / aspect;
-      const viewWidth = viewHeight * aspect;
-      camera.aspect = aspect;
-      const rect = container.getBoundingClientRect();
-      camera.setViewOffset(view.width, view.height, -rect.left, -rect.top, window.innerWidth, window.innerHeight);
+
+      const homeWidth = Math.max(1, container.clientWidth);
+      const homeHeight = Math.max(1, container.clientHeight);
+
+      camera.aspect = homeWidth / homeHeight;
+      camera.clearViewOffset();
+
+      const slot = slotRef?.current;
+      let viewHeight: number;
+      let viewWidth: number;
+      let anchorX: number;
+      let anchorY: number;
+      let cardTop: number;
+
+      if (slot) {
+        const slotRect = slot.getBoundingClientRect();
+        const homeRect = container.getBoundingClientRect();
+        const slotWidth = Math.max(1, slotRect.width);
+        const slotHeight = Math.max(1, slotRect.height);
+
+        const slotAspect = slotWidth / slotHeight;
+        let slotViewHeight = layout.height / clamp(s.size, 0.15, 0.9);
+        const minimumWidth = layout.width / 0.72;
+        if (slotViewHeight * slotAspect < minimumWidth) {
+          slotViewHeight = minimumWidth / slotAspect;
+        }
+
+        // Ukuran kartu dihitung proporsional terhadap slot (bukan memenuhi 1 halaman penuh layar)
+        viewHeight = slotViewHeight * (homeHeight / slotHeight);
+        viewWidth = viewHeight * camera.aspect;
+
+        const slotCenterX = slotRect.left - homeRect.left + slotWidth / 2;
+        const slotCenterY = slotRect.top - homeRect.top + slotHeight / 2;
+
+        anchorX = ((slotCenterX / homeWidth) - 0.5) * viewWidth;
+        const slotCenterWorldY = (0.5 - (slotCenterY / homeHeight)) * viewHeight;
+        const slotTopWorldY = slotCenterWorldY + slotViewHeight / 2;
+
+        anchorY = slotTopWorldY + 0.15;
+        cardTop = slotTopWorldY - slotViewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+      } else {
+        const aspect = homeWidth / homeHeight;
+        viewHeight = layout.height / clamp(s.size, 0.15, 0.9);
+        const minimumWidth = layout.width / 0.72;
+        if (viewHeight * aspect < minimumWidth) {
+          viewHeight = minimumWidth / aspect;
+        }
+        viewWidth = viewHeight * aspect;
+
+        const anchorVal = typeof s.anchor === 'number' ? s.anchor : (ANCHORS[s.anchor as keyof typeof ANCHORS] ?? 0.5);
+        anchorX = (anchorVal - 0.5) * viewWidth;
+        anchorY = viewHeight / 2 + 0.2;
+        cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+      }
+
       camera.position.set(0, 0, viewHeight / 2 / Math.tan((FOV * Math.PI) / 360));
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
       camera.updateMatrixWorld();
+
       foilUniforms.foilKey.value.set(-2.5, 4, 6).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilFill.value.set(3, -1, 4).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilTop.value.set(0.5, 4.5, 8).normalize().transformDirection(camera.matrixWorldInverse);
-      const anchorX = ((ANCHORS[s.anchor] ?? 0.5) - 0.5) * viewWidth;
-      const anchorY = viewHeight / 2 + 0.2;
-      const cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+
       const hangTop = cardTop + (layout.hangY - layout.height / 2);
+      const prevAnchorX = sim.anchor.x;
+      const prevAnchorY = sim.anchor.y;
       sim.anchor.set(anchorX, anchorY, 0);
       configureSimulation(sim, layout, anchorY - hangTop);
-      sim.nodes[0].copy(sim.anchor);
-      sim.previous[0].copy(sim.anchor);
+
+      if (placed) {
+        const dx = anchorX - prevAnchorX;
+        const dy = anchorY - prevAnchorY;
+        if (Math.abs(dx) > 0.001 || Math.abs(dy) > 0.001) {
+          sim.body.position.x += dx;
+          sim.body.position.y += dy;
+          sim.body.previous.x += dx;
+          sim.body.previous.y += dy;
+          for (let i = 0; i <= JOINTS; i++) {
+            sim.nodes[i].x += dx;
+            sim.nodes[i].y += dy;
+            sim.previous[i].x += dx;
+            sim.previous[i].y += dy;
+          }
+        }
+      } else {
+        sim.nodes[0].copy(sim.anchor);
+        sim.previous[0].copy(sim.anchor);
+      }
     };
 
     const apply = () => {
@@ -976,7 +1047,11 @@ const Lanyard = ({
         ring.position.set(0, layout.ringY, 0);
         applied.framingKey = '';
       }
-      const framingKey = `${layoutKey}|${s.size}|${s.anchor}|${s.strapLength}|${view.width}|${view.height}`;
+      const slot = slotRef?.current;
+      const slotKey = slot
+        ? `${Math.round(slot.getBoundingClientRect().left)}|${Math.round(slot.getBoundingClientRect().top)}|${Math.round(slot.offsetWidth)}|${Math.round(slot.offsetHeight)}`
+        : '';
+      const framingKey = `${layoutKey}|${s.size}|${s.anchor}|${s.strapLength}|${view.width}|${view.height}|${slotKey}`;
       if (framingKey !== applied.framingKey) {
         frameView();
         if (!placed) {
@@ -985,6 +1060,7 @@ const Lanyard = ({
         } else if (layoutKey !== applied.layoutKey) {
           placeHanging(sim, layout, false);
         }
+        applied.framingKey = framingKey;
       }
 
       const imageKey = `${s.frontImage}|${s.backImage}|${s.strapImage}`;
@@ -1274,23 +1350,25 @@ const Lanyard = ({
     document.addEventListener('touchmove', onTouchMove, { passive: false });
 
     const resize = () => {
-      view.width = Math.max(1, container.clientWidth);
-      view.height = Math.max(1, container.clientHeight);
+      const homeWidth = Math.max(1, container.clientWidth);
+      const homeHeight = Math.max(1, container.clientHeight);
+
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight, false);
+      renderer.setSize(homeWidth, homeHeight, false);
+
+      view.width = homeWidth;
+      view.height = homeHeight;
+
       apply();
       render();
     };
 
     const resizeObserver = new ResizeObserver(resize);
-    const onScroll = () => {
-      const rect = container.getBoundingClientRect();
-      camera.setViewOffset(view.width, view.height, -rect.left, -rect.top, window.innerWidth, window.innerHeight);
-      render();
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', resize);
     resizeObserver.observe(container);
+    if (slotRef?.current) {
+      resizeObserver.observe(slotRef.current);
+    }
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       if (visible) start();
@@ -1311,7 +1389,6 @@ const Lanyard = ({
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resize);
       document.removeEventListener('pointerdown', onPointerDown);
       document.removeEventListener('pointermove', onPointerMove);
@@ -1327,7 +1404,7 @@ const Lanyard = ({
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, []);
+  }, [slotRef]);
 
   return <div ref={containerRef} className={`lanyard ${className}`.trim()} style={style} />;
 };
